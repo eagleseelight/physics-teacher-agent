@@ -1,0 +1,36 @@
+# 物理知识点清单自动生成脚本
+name: Generate Physics Knowledge List
+
+# 触发条件：每天晚上8点自动运行，也可以手动触发
+on:
+  schedule:
+    - cron: '0 12 * * *'  # 对应北京时间20:00（GitHub服务器是UTC时间）
+  workflow_dispatch:  # 手动触发开关
+
+# 权限：默认只读，安全
+permissions:
+  contents: read
+
+# 运行步骤
+jobs:
+  generate-list:
+    runs-on: ubuntu-latest  # 用Linux服务器运行
+    steps:
+      - name: 检出仓库代码
+        uses: actions/checkout@v4
+
+      - name: 生成物理知识点清单
+        run: |
+          # 生成高中物理核心知识点
+          echo "### 高中物理核心知识点清单（自动生成）" > knowledge-list.md
+          echo "" >> knowledge-list.md
+          echo "- 力学：牛顿运动定律、功和能、动量守恒" >> knowledge-list.md
+          echo "- 电磁学：电场、磁场、电磁感应" >> knowledge-list.md
+          echo "- 热学：热力学定律、气体实验定律" >> knowledge-list.md
+          echo "- 光学：光的反射、折射、干涉衍射" >> knowledge-list.md
+          echo "- 近代物理：光电效应、原子结构、核反应" >> knowledge-list.md
+          echo "" >> knowledge-list.md
+          echo "生成时间：$(date +'%Y-%m-%d %H:%M:%S')" >> knowledge-list.md
+
+      - name: 输出清单到日志
+        run: cat knowledge-list.md
