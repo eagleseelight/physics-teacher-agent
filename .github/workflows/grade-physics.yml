@@ -1,0 +1,39 @@
+name: Grade Physics Homework
+
+on:
+  workflow_dispatch:  # 允许手动触发
+    inputs:
+      student_answer:
+        description: "学生提交的答案"
+        required: true
+        default: "F=ma"
+      correct_answer:
+        description: "标准答案"
+        required: true
+        default: "F=ma"
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Grade the answer
+        id: grade
+        run: |
+          STUDENT_ANSWER="${{ github.event.inputs.student_answer }}"
+          CORRECT_ANSWER="${{ github.event.inputs.correct_answer }}"
+          
+          if [ "$STUDENT_ANSWER" == "$CORRECT_ANSWER" ]; then
+            echo "result=✅ 回答正确" >> $GITHUB_OUTPUT
+            echo "score=100" >> $GITHUB_OUTPUT
+          else
+            echo "result=❌ 回答错误" >> $GITHUB_OUTPUT
+            echo "score=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Output result
+        run: |
+          echo "批改结果: ${{ steps.grade.outputs.result }}"
+          echo "得分: ${{ steps.grade.outputs.score }}"
